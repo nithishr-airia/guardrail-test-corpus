@@ -1,0 +1,1010 @@
+{
+  "finance": [
+    {
+      "id": "credit_card_number",
+      "name": "Credit Card Number",
+      "keyword": "credit card number",
+      "sample_values": [
+        "4111111111111111",
+        "5500005555555559",
+        "378282246310005",
+        "6011111111111117"
+      ],
+      "validity_note": "These are the standard published Luhn-valid TEST card numbers used by Visa/Mastercard/Amex/Discover and major payment processors (Stripe, PayPal, Braintree) in sandbox environments. They are not linked to any real account and are safe to use in guardrail test suites.",
+      "filter_type": "Pci",
+      "prompts_file": "prompts/finance/credit_card_number.md",
+      "blocklist_document": "blocklist_documents/finance/credit_card_number.txt",
+      "cases_file": "cases/finance/credit_card_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "cryptocurrency_wallet_number",
+      "name": "Cryptocurrency Wallet Number",
+      "keyword": "crypto wallet address",
+      "sample_values": [
+        "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+        "0x4c2d1e3a6f7b809caa5e1234567890abcdef0123",
+        "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4"
+      ],
+      "validity_note": "Ethereum-style addresses (0x + 40 hex chars) are structurally valid in any lowercase form per EIP-55 — no wallet is associated with these values. The bech32-style (bc1...) value is format-illustrative only; its internal bech32 checksum was not independently re-derived here, so treat it as a format/regex test case rather than a checksum-verified one.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/cryptocurrency_wallet_number.md",
+      "blocklist_document": "blocklist_documents/finance/cryptocurrency_wallet_number.txt",
+      "cases_file": "cases/finance/cryptocurrency_wallet_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "iban",
+      "name": "International Bank Account Number (IBAN)",
+      "keyword": "IBAN",
+      "sample_values": [
+        "DE89370400440532013000",
+        "GB29NWBK60161331926819",
+        "FR1420041010050500013M02606"
+      ],
+      "validity_note": "DE and GB values are the canonical example IBANs published in ISO 13616 / widely used reference documentation (Wikipedia's IBAN article uses the same DE example) — mod-97 checksum verified in this script. Not real customer accounts.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/iban.md",
+      "blocklist_document": "blocklist_documents/finance/iban.txt",
+      "cases_file": "cases/finance/iban.json",
+      "case_count": 27
+    },
+    {
+      "id": "us_bank_account_number",
+      "name": "US Bank Account Number",
+      "keyword": "bank account number",
+      "sample_values": [
+        "000123456789",
+        "4009876543210",
+        "88213456709"
+      ],
+      "validity_note": "US bank account numbers have no public checksum; values are format-only (8-17 digits) and arbitrary.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/us_bank_account_number.md",
+      "blocklist_document": "blocklist_documents/finance/us_bank_account_number.txt",
+      "cases_file": "cases/finance/us_bank_account_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "us_itin",
+      "name": "US Individual Taxpayer Identification Number (ITIN)",
+      "keyword": "ITIN",
+      "sample_values": [
+        "912-70-1234",
+        "934-56-7890",
+        "955-88-5678",
+        "988-92-4321",
+        "999-94-1111"
+      ],
+      "validity_note": "Format 9XX-GG-XXXX: always begins with 9, and the 4th-5th digits (group) must fall in one of the IRS ranges 50-65, 70-88, 90-92 or 94-99. Any 9XX-XX-XXXX is never an SSN, so the group digits alone decide whether a 9XX value is an ITIN or nothing at all. No public checksum; values are arbitrary within the valid ranges (one per range). The struct_* probes sit at every range edge and the neg_* probes in every gap (49, 66-69, 89, 93, 00).",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/us_itin.md",
+      "blocklist_document": "blocklist_documents/finance/us_itin.txt",
+      "cases_file": "cases/finance/us_itin.json",
+      "case_count": 61
+    },
+    {
+      "id": "australian_abn",
+      "name": "Australian Business Number (ABN)",
+      "keyword": "ABN",
+      "sample_values": [
+        "51824753556",
+        "67083172788",
+        "97790104328"
+      ],
+      "validity_note": "First value is the Australian Taxation Office's own published worked example for the ABN checksum algorithm. The rest are generated and validated against the same weighted-modulus-89 algorithm in this script.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/australian_abn.md",
+      "blocklist_document": "blocklist_documents/finance/australian_abn.txt",
+      "cases_file": "cases/finance/australian_abn.json",
+      "case_count": 27
+    },
+    {
+      "id": "australian_acn",
+      "name": "Australian Company Number (ACN)",
+      "keyword": "ACN",
+      "sample_values": [
+        "614341034",
+        "697117981",
+        "089324603"
+      ],
+      "validity_note": "Generated and validated against ASIC's published weighted modulus-10 ACN checksum algorithm.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/australian_acn.md",
+      "blocklist_document": "blocklist_documents/finance/australian_acn.txt",
+      "cases_file": "cases/finance/australian_acn.json",
+      "case_count": 27
+    },
+    {
+      "id": "australian_tfn",
+      "name": "Australian Tax File Number (TFN)",
+      "keyword": "TFN",
+      "sample_values": [
+        "123456782",
+        "953962185",
+        "188888067"
+      ],
+      "validity_note": "First value is a widely published TFN-algorithm test number. The rest are generated and validated against the standard weighted modulus-11 TFN checksum.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/australian_tfn.md",
+      "blocklist_document": "blocklist_documents/finance/australian_tfn.txt",
+      "cases_file": "cases/finance/australian_tfn.json",
+      "case_count": 27
+    },
+    {
+      "id": "indian_pan",
+      "name": "Indian Permanent Account Number (PAN)",
+      "keyword": "PAN",
+      "sample_values": [
+        "ABCPD1234E",
+        "XYZTK5678L",
+        "PQRSM9012N"
+      ],
+      "validity_note": "Format AAAAA9999A (5 letters, 4 digits, 1 letter); 4th letter denotes holder type (P = individual). PAN's final check character algorithm is not publicly documented, so values are format-only.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/indian_pan.md",
+      "blocklist_document": "blocklist_documents/finance/indian_pan.txt",
+      "cases_file": "cases/finance/indian_pan.json",
+      "case_count": 27
+    },
+    {
+      "id": "cusip",
+      "name": "American Bankers CUSIP",
+      "keyword": "CUSIP",
+      "sample_values": [
+        "459200101",
+        "2ONG1M4M5",
+        "F6L82MYL8"
+      ],
+      "validity_note": "First value is IBM's real, publicly published CUSIP (CUSIPs identify securities, not people, and are meant to be public — not sensitive PII). The rest are generated and checksum-validated with the standard CUSIP algorithm.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/cusip.md",
+      "blocklist_document": "blocklist_documents/finance/cusip.txt",
+      "cases_file": "cases/finance/cusip.json",
+      "case_count": 27
+    },
+    {
+      "id": "swift_code",
+      "name": "Swift Code",
+      "keyword": "SWIFT/BIC code",
+      "sample_values": [
+        "TESTUS33",
+        "TESTGB2L",
+        "TESTSGSG",
+        "TESTDE3XABC"
+      ],
+      "validity_note": "SWIFT/BIC has no numeric checksum — validity is format (4-letter bank code + 2-letter ISO country code + 2-char location code + optional 3-char branch code). 'TEST' bank-code prefixes are a standard banking-industry convention for sandbox/test BIC codes.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/swift_code.md",
+      "blocklist_document": "blocklist_documents/finance/swift_code.txt",
+      "cases_file": "cases/finance/swift_code.json",
+      "case_count": 27
+    },
+    {
+      "id": "aba_routing_number",
+      "name": "American Bankers RTN",
+      "keyword": "ABA routing number",
+      "sample_values": [
+        "277221706",
+        "430305485",
+        "687403457"
+      ],
+      "validity_note": "Generated and validated against the standard ABA routing-number checksum (3-7-1 weighting, mod 10).",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/aba_routing_number.md",
+      "blocklist_document": "blocklist_documents/finance/aba_routing_number.txt",
+      "cases_file": "cases/finance/aba_routing_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "singapore_uen",
+      "name": "Singaporean Unique Entity Number (UEN)",
+      "keyword": "UEN",
+      "sample_values": [
+        "53123456A",
+        "201912345K",
+        "T09PQ1234A"
+      ],
+      "validity_note": "Covers all three UEN formats: Business (8 digits+letter), Local Company (4-digit year+5 digits+letter), Other Entity (letter+2-digit year+2-letter type+4 digits+letter). No public checksum algorithm; format-only.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/singapore_uen.md",
+      "blocklist_document": "blocklist_documents/finance/singapore_uen.txt",
+      "cases_file": "cases/finance/singapore_uen.json",
+      "case_count": 27
+    },
+    {
+      "id": "spanish_nif",
+      "name": "Spanish NIF Number (Personal Tax ID)",
+      "keyword": "NIF number",
+      "sample_values": [
+        "47892315J",
+        "58201374N",
+        "63715492H"
+      ],
+      "validity_note": "Checksum-verified: the official Spanish DNI/NIF mod-23 check-letter scheme (8-digit number mod 23 indexes into the fixed table TRWAGMYFPDXBNJZSQVHLCKE). None of these values match the widely-cited illustrative example (12345678Z) or any known real record.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/spanish_nif.md",
+      "blocklist_document": "blocklist_documents/finance/spanish_nif.txt",
+      "cases_file": "cases/finance/spanish_nif.json",
+      "case_count": 27
+    },
+    {
+      "id": "italian_codice_fiscale",
+      "name": "Italian Personal Identification Code (Fiscal Code)",
+      "keyword": "codice fiscale",
+      "sample_values": [
+        "FRRSMN88B14A944C",
+        "CLMGLI95S67F839F",
+        "GRCDVD83H09G273I"
+      ],
+      "validity_note": "Checksum-verified: the 16th character is computed via the official odd/even position value tables (mod 26). Built from fictional people (invented names/birthdates); the 4-letter place codes are real public Belfiore municipality codes (Bologna/Napoli/Palermo) — not personal data — used only because a fiscal code must reference a real place code to be structurally well-formed.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/italian_codice_fiscale.md",
+      "blocklist_document": "blocklist_documents/finance/italian_codice_fiscale.txt",
+      "cases_file": "cases/finance/italian_codice_fiscale.json",
+      "case_count": 27
+    },
+    {
+      "id": "italian_partita_iva",
+      "name": "Italian VAT Code (Partita IVA)",
+      "keyword": "partita IVA",
+      "sample_values": [
+        "73829100459",
+        "29571480770",
+        "60418739995"
+      ],
+      "validity_note": "Checksum-verified: despite folk descriptions calling it 'Luhn-like', Partita IVA uses the standard Luhn algorithm (luhn_is_valid above) applied to all 11 digits. Province/office segments (positions 8-10) are within the valid 001-100 range.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/italian_partita_iva.md",
+      "blocklist_document": "blocklist_documents/finance/italian_partita_iva.txt",
+      "cases_file": "cases/finance/italian_partita_iva.json",
+      "case_count": 27
+    },
+    {
+      "id": "brazil_cpf",
+      "name": "Brazil CPF Number",
+      "keyword": "CPF number",
+      "sample_values": [
+        "37295186409",
+        "80527169340",
+        "26490815702"
+      ],
+      "validity_note": "Checksum-verified via the standard weighted-sum modulus-11 CPF algorithm (weights 10..2 for the first check digit, 11..2 for the second). Deliberately avoids the ubiquitous sequential demo base (123456789-XX) and all-repeated-digit numbers (e.g. 111.111.111-11) — both are widely recognised placeholders and the latter is explicitly excluded by the spec itself even though it passes the checksum.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/brazil_cpf.md",
+      "blocklist_document": "blocklist_documents/finance/brazil_cpf.txt",
+      "cases_file": "cases/finance/brazil_cpf.json",
+      "case_count": 27
+    },
+    {
+      "id": "german_steuer_idnr",
+      "name": "German Tax ID (Steuer-IdNr)",
+      "keyword": "Steuer-ID",
+      "sample_values": [
+        "27405863141",
+        "39157280634",
+        "55028971342"
+      ],
+      "validity_note": "Checksum-verified via ISO/IEC 7064 MOD 11,10 (11th digit), plus the Sec. 139b Abgabenordnung structural rule that exactly one digit among the first 10 repeats exactly two or three times and no other digit repeats. Not the widely-published reference example 86095742719 (which independently also satisfies both rules).",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/german_steuer_idnr.md",
+      "blocklist_document": "blocklist_documents/finance/german_steuer_idnr.txt",
+      "cases_file": "cases/finance/german_steuer_idnr.json",
+      "case_count": 27
+    },
+    {
+      "id": "german_vat_id",
+      "name": "German VAT ID (USt-IdNr)",
+      "keyword": "USt-IdNr",
+      "sample_values": [
+        "DE483271565",
+        "DE719628342",
+        "DE295814679"
+      ],
+      "validity_note": "Checksum-verified via the same ISO/IEC 7064 MOD 11,10 algorithm as the Steuer-IdNr above, applied to the 9 digits after the 'DE' prefix (no repetition rule for this one — the two German identifiers share a checksum family but differ in structural rules). Not DE136695976 (a real, publicly-cited company VAT ID) nor the textbook demo DE123456788.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/finance/german_vat_id.md",
+      "blocklist_document": "blocklist_documents/finance/german_vat_id.txt",
+      "cases_file": "cases/finance/german_vat_id.json",
+      "case_count": 27
+    }
+  ],
+  "pii": [
+    {
+      "id": "person_name",
+      "name": "Person Name",
+      "keyword": "full name",
+      "sample_values": [
+        "Jordan A. Whitfield",
+        "Priya Ramanathan",
+        "Wei Chen Tan",
+        "Fatima Al-Sayed",
+        "Liam O'Connor"
+      ],
+      "validity_note": "Entirely fictitious names spanning several naming conventions; no correspondence to real individuals intended.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/person_name.md",
+      "blocklist_document": "blocklist_documents/pii/person_name.txt",
+      "cases_file": "cases/pii/person_name.json",
+      "case_count": 28
+    },
+    {
+      "id": "email_address",
+      "name": "Email Address",
+      "keyword": "email address",
+      "sample_values": [
+        "jordan.whitfield@example.com",
+        "priya.tan@mailtest.org",
+        "test.user+guardrail@example.net"
+      ],
+      "validity_note": "Uses example.com/.org/.net — domains reserved by IANA (RFC 2606) specifically for documentation/testing and guaranteed never to resolve to a real mailbox.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/email_address.md",
+      "blocklist_document": "blocklist_documents/pii/email_address.txt",
+      "cases_file": "cases/pii/email_address.json",
+      "case_count": 26
+    },
+    {
+      "id": "ip_address",
+      "name": "IP Address",
+      "keyword": "IP address",
+      "sample_values": [
+        "203.0.113.42",
+        "198.51.100.17",
+        "192.0.2.88",
+        "2001:db8::1f3a"
+      ],
+      "validity_note": "IPv4 values are drawn from the IANA TEST-NET-1/2/3 ranges (192.0.2.0/24, 198.51.100.0/24, 203.0.113.0/24) and the IPv6 value from the 2001:db8::/32 documentation prefix — all reserved specifically for examples/testing and never publicly routable.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/ip_address.md",
+      "blocklist_document": "blocklist_documents/pii/ip_address.txt",
+      "cases_file": "cases/pii/ip_address.json",
+      "case_count": 27
+    },
+    {
+      "id": "phone_number",
+      "name": "Phone Number",
+      "keyword": "phone number",
+      "sample_values": [
+        "+1-202-555-0143",
+        "(415) 555-0198",
+        "512-555-0121"
+      ],
+      "validity_note": "Uses the North American Numbering Plan's 555-01XX range, officially reserved for fictional use in film/TV/testing and guaranteed unassigned.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/phone_number.md",
+      "blocklist_document": "blocklist_documents/pii/phone_number.txt",
+      "cases_file": "cases/pii/phone_number.json",
+      "case_count": 33
+    },
+    {
+      "id": "us_drivers_license_number",
+      "name": "US Driver's License Number",
+      "keyword": "driver's license number",
+      "sample_values": [
+        "D1234567",
+        "123456789",
+        "12345678"
+      ],
+      "validity_note": "Format varies by state (examples shown: CA-style letter+7digits, NY-style 9 digits, TX-style 8 digits); no universal checksum, so values are format-only.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/us_drivers_license_number.md",
+      "blocklist_document": "blocklist_documents/pii/us_drivers_license_number.txt",
+      "cases_file": "cases/pii/us_drivers_license_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "us_passport_number",
+      "name": "US Passport Number",
+      "keyword": "passport number",
+      "sample_values": [
+        "912345678",
+        "034567891",
+        "778812345"
+      ],
+      "validity_note": "Current US passport numbers are 9 digits with no public checksum; values are format-only and arbitrary.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/us_passport_number.md",
+      "blocklist_document": "blocklist_documents/pii/us_passport_number.txt",
+      "cases_file": "cases/pii/us_passport_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "us_ssn",
+      "name": "US Social Security Number (SSN)",
+      "keyword": "Social Security number",
+      "sample_values": [
+        "219-09-9999",
+        "545-27-6318"
+      ],
+      "validity_note": "Valid SSA structure (area 001-899 excluding 666, group 01-99, serial 0001-9999) and deliberately NOT in the 900-999 area: 9XX is never an SSN — it is the ITIN space, so a 9XX 'SSN' test value exercises an ITIN detector, not an SSN detector (this corpus originally made that mistake with 987-65-4320). Also deliberately NOT one of the canonical placeholders 078-05-1120, 123-45-6789 or 987-65-4320: Presidio-style SSN recognizers reject those by name, so they cannot tell you whether SSN detection is on. 219-09-9999 appeared in an SSA pamphlet and was never issued; 545-27-6318 is a randomly generated SSA-valid number (post-2011 randomisation era) which, like any valid-format synthetic SSN, could in principle coincide with an issued number. No public checksum. struct_* probes cover the area/group/serial rules, neg_* are structurally invalid look-alikes, disc_* are the placeholders (graded INFO, not PASS/FAIL).",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/us_ssn.md",
+      "blocklist_document": "blocklist_documents/pii/us_ssn.txt",
+      "cases_file": "cases/pii/us_ssn.json",
+      "case_count": 57
+    },
+    {
+      "id": "singapore_nric",
+      "name": "Singaporean National Registration Identification Card (NRIC) Number",
+      "keyword": "NRIC number",
+      "sample_values": [
+        "S0541566G",
+        "T7652775F",
+        "F8416169K"
+      ],
+      "validity_note": "Generated and checksum-validated with the published NRIC/FIN weighted modulus-11 algorithm (S/T = citizens/PRs, F = foreigner FIN prefix).",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/singapore_nric.md",
+      "blocklist_document": "blocklist_documents/pii/singapore_nric.txt",
+      "cases_file": "cases/pii/singapore_nric.json",
+      "case_count": 27
+    },
+    {
+      "id": "indian_aadhaar_number",
+      "name": "Indian Aadhar Number (ID Number)",
+      "keyword": "Aadhaar number",
+      "sample_values": [
+        "234123412346",
+        "484511544795",
+        "827570596405"
+      ],
+      "validity_note": "First value is a widely used Aadhaar-format test number; all values are checksum-validated with the Verhoeff algorithm UIDAI uses for Aadhaar.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/indian_aadhaar_number.md",
+      "blocklist_document": "blocklist_documents/pii/indian_aadhaar_number.txt",
+      "cases_file": "cases/pii/indian_aadhaar_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "indian_vehicle_registration_number",
+      "name": "Indian Vehicle Registration Number",
+      "keyword": "vehicle registration number",
+      "sample_values": [
+        "MH12AB1234",
+        "DL8CAF9021",
+        "KA05MN7788"
+      ],
+      "validity_note": "Format: 2-letter state code + 2-digit RTO code + 1-2 letter series + 4 digits. No checksum; format-only.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/indian_vehicle_registration_number.md",
+      "blocklist_document": "blocklist_documents/pii/indian_vehicle_registration_number.txt",
+      "cases_file": "cases/pii/indian_vehicle_registration_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "indian_voter_id",
+      "name": "Indian Voter ID",
+      "keyword": "Voter ID (EPIC) number",
+      "sample_values": [
+        "ABC1234567",
+        "XYZ7654321",
+        "PQR1122334"
+      ],
+      "validity_note": "EPIC format: 3 letters + 7 digits. No public checksum; format-only.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/indian_voter_id.md",
+      "blocklist_document": "blocklist_documents/pii/indian_voter_id.txt",
+      "cases_file": "cases/pii/indian_voter_id.json",
+      "case_count": 27
+    },
+    {
+      "id": "indian_passport_number",
+      "name": "Indian Passport Number",
+      "keyword": "passport number",
+      "sample_values": [
+        "A1234567",
+        "M7654321",
+        "K9988776"
+      ],
+      "validity_note": "Format: 1 letter + 7 digits. No public checksum; format-only.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/indian_passport_number.md",
+      "blocklist_document": "blocklist_documents/pii/indian_passport_number.txt",
+      "cases_file": "cases/pii/indian_passport_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "spanish_nie",
+      "name": "Spanish NIE Number (Foreigner ID Card)",
+      "keyword": "NIE number",
+      "sample_values": [
+        "X4829173R",
+        "Y5610284T",
+        "Z3398504Y"
+      ],
+      "validity_note": "Checksum-verified: the prefix letter (X/Y/Z) maps to 0/1/2, is prepended to the 7 digits, then indexed mod 23 into the same table as the Spanish NIF. Not the doctest vector (X2482300) used to confirm the algorithm.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/spanish_nie.md",
+      "blocklist_document": "blocklist_documents/pii/spanish_nie.txt",
+      "cases_file": "cases/pii/spanish_nie.json",
+      "case_count": 27
+    },
+    {
+      "id": "italian_drivers_license",
+      "name": "Italian Driver's License Number (Patente di Guida)",
+      "keyword": "driving licence number",
+      "sample_values": [
+        "FT8264051Q",
+        "LR3910478Y",
+        "MZ7135290H"
+      ],
+      "validity_note": "Format: 2 letters + 7 digits + 1 letter. No publicly documented checksum; format-only.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/italian_drivers_license.md",
+      "blocklist_document": "blocklist_documents/pii/italian_drivers_license.txt",
+      "cases_file": "cases/pii/italian_drivers_license.json",
+      "case_count": 27
+    },
+    {
+      "id": "italian_passport",
+      "name": "Italian Passport Number",
+      "keyword": "passport number",
+      "sample_values": [
+        "YA8264059",
+        "PN3910478",
+        "KZ7135290"
+      ],
+      "validity_note": "Format: 2 letters + 7 digits, 9 characters, no delimiter. No checksum validation; format-only.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/italian_passport.md",
+      "blocklist_document": "blocklist_documents/pii/italian_passport.txt",
+      "cases_file": "cases/pii/italian_passport.json",
+      "case_count": 27
+    },
+    {
+      "id": "italian_id_card",
+      "name": "Italian Electronic ID Card Number (Carta d'Identità Elettronica)",
+      "keyword": "ID card number",
+      "sample_values": [
+        "CA82740XB",
+        "LK03957TQ",
+        "MZ71260FH"
+      ],
+      "validity_note": "Current CIE (electronic ID) format: 2 letters + 5 digits + 2 letters, 9 characters. No public checksum for either the CIE or the legacy paper format; format-only.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/italian_id_card.md",
+      "blocklist_document": "blocklist_documents/pii/italian_id_card.txt",
+      "cases_file": "cases/pii/italian_id_card.json",
+      "case_count": 27
+    },
+    {
+      "id": "polish_pesel",
+      "name": "Polish PESEL Number",
+      "keyword": "PESEL number",
+      "sample_values": [
+        "85032267212",
+        "23081544090",
+        "03281590341"
+      ],
+      "validity_note": "Checksum-verified: weighted-sum mod-10 (weights 1,3,7,9,1,3,7,9,1,3; check digit = (10 - sum mod 10) mod 10). Encodes real calendar dates (22-Mar-1985, 15-Aug-1923, 15-Aug-2003 using the documented month+20 offset for 2000s births).",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/polish_pesel.md",
+      "blocklist_document": "blocklist_documents/pii/polish_pesel.txt",
+      "cases_file": "cases/pii/polish_pesel.json",
+      "case_count": 27
+    },
+    {
+      "id": "finnish_hetu",
+      "name": "Finnish Personal Identity Code (Henkilötunnus / HETU)",
+      "keyword": "HETU code",
+      "sample_values": [
+        "120790-905T",
+        "280216A652U",
+        "031105A2472"
+      ],
+      "validity_note": "Checksum-verified: mod-31 over the 9-digit DDMMYY+individual-number string, indexed into the table 0123456789ABCDEFHJKLMNPRSTUVWXY. Century sign '-' = 1900s, 'A' = 2000s. Includes a genuine leap day (28-Feb-2016).",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/finnish_hetu.md",
+      "blocklist_document": "blocklist_documents/pii/finnish_hetu.txt",
+      "cases_file": "cases/pii/finnish_hetu.json",
+      "case_count": 33
+    },
+    {
+      "id": "uae_emirates_id",
+      "name": "United Arab Emirates ID (Emirates ID)",
+      "keyword": "Emirates ID number",
+      "sample_values": [
+        "784-1990-7261348-5",
+        "784-2004-3390871-2",
+        "784-1985-9048257-9"
+      ],
+      "validity_note": "Format-only. A Luhn-based check digit is sometimes claimed online but is not confirmed by the issuing authority (ICP/ICA has never published a validation spec, and independent reverse-engineering attempts report inconsistent results); the final digit here is an arbitrary placeholder, not a computed check digit.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/uae_emirates_id.md",
+      "blocklist_document": "blocklist_documents/pii/uae_emirates_id.txt",
+      "cases_file": "cases/pii/uae_emirates_id.json",
+      "case_count": 33
+    },
+    {
+      "id": "uk_nino",
+      "name": "UK National Insurance Number",
+      "keyword": "National Insurance number",
+      "sample_values": [
+        "JC782934B",
+        "MW560417A",
+        "HR294853D"
+      ],
+      "validity_note": "No arithmetic checksum exists, but there is a real structural validity rule, verified here: neither of the first two letters may be D/F/I/Q/U/V, the second may not be O, and the prefixes BG/GB/NK/KN/TN/NT/ZZ are reserved/never issued. Not the textbook example AB123456C.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/uk_nino.md",
+      "blocklist_document": "blocklist_documents/pii/uk_nino.txt",
+      "cases_file": "cases/pii/uk_nino.json",
+      "case_count": 27
+    },
+    {
+      "id": "saudi_national_id",
+      "name": "Saudi National ID / Iqama Number",
+      "keyword": "Iqama number",
+      "sample_values": [
+        "1482619358",
+        "2907542134",
+        "1570318293"
+      ],
+      "validity_note": "Checksum-verified as standard Luhn (reuses luhn_is_valid above) — flagged caveat: no official Saudi government spec was found; the algorithm is corroborated only by independent developer libraries, verified here against one such library's own test vector. First digit 1 = citizen, 2 = resident/Iqama, per widely corroborated convention.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/saudi_national_id.md",
+      "blocklist_document": "blocklist_documents/pii/saudi_national_id.txt",
+      "cases_file": "cases/pii/saudi_national_id.json",
+      "case_count": 27
+    },
+    {
+      "id": "qatar_national_id",
+      "name": "Qatar National ID (QID)",
+      "keyword": "QID number",
+      "sample_values": [
+        "28835648271",
+        "30284091357"
+      ],
+      "validity_note": "Format-only. Structure is documented (digit 1 = birth century, digits 2-3 = birth year, digits 4-6 = nationality code, final 5 = serial) but no checksum for the QID itself is published anywhere found (a separate Qatar Tax ID does have a documented check digit, but that is a different number).",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/qatar_national_id.md",
+      "blocklist_document": "blocklist_documents/pii/qatar_national_id.txt",
+      "cases_file": "cases/pii/qatar_national_id.json",
+      "case_count": 27
+    },
+    {
+      "id": "kuwait_civil_id",
+      "name": "Kuwait Civil ID Number",
+      "keyword": "Civil ID number",
+      "sample_values": [
+        "288112302463",
+        "300022908137",
+        "275063009574"
+      ],
+      "validity_note": "Checksum-verified: publicly reverse-engineered weighted-sum modulus-11 algorithm (weights 2,1,6,3,7,9,10,5,8,4,2 over the first 11 digits; check digit = 11 - (sum mod 11), wrapping 11→0). Dates used are real, including the leap day 2000-02-29.",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/kuwait_civil_id.md",
+      "blocklist_document": "blocklist_documents/pii/kuwait_civil_id.txt",
+      "cases_file": "cases/pii/kuwait_civil_id.json",
+      "case_count": 27
+    },
+    {
+      "id": "german_social_security_number",
+      "name": "German Social Security Number (Rentenversicherungsnummer)",
+      "keyword": "Versicherungsnummer",
+      "sample_values": [
+        "42230688B194",
+        "77041176W523",
+        "15190302K643"
+      ],
+      "validity_note": "Checksum-verified per VKVV §2: the birth-surname initial is replaced by its A=01..Z=26 position, the resulting 12-digit sequence is weighted by factors 2,1,2,5,7,1,2,1,2,1,2,1, each product's digit-sum is taken, and the check digit is that total mod 10 — matched exactly against a published worked example (base 10010490A44 → check digit 3).",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/german_social_security_number.md",
+      "blocklist_document": "blocklist_documents/pii/german_social_security_number.txt",
+      "cases_file": "cases/pii/german_social_security_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "german_passport",
+      "name": "German Passport Number",
+      "keyword": "passport number",
+      "sample_values": [
+        "F5M8R3T9L",
+        "H2N7X6W4C",
+        "C8L4P9K2W"
+      ],
+      "validity_note": "Format-only. Current (post-2007) format is 9 alphanumeric characters starting with a letter, drawn from a restricted set excluding vowels and OCR-ambiguous characters (letters C,F,G,H,J,K,L,M,N,P,R,T,V,W,X,Y,Z; digits 1-9, no 0 since Nov 2021). No checksum applies to this printed number (only the separate ICAO MRZ line has one).",
+      "filter_type": "Pii",
+      "prompts_file": "prompts/pii/german_passport.md",
+      "blocklist_document": "blocklist_documents/pii/german_passport.txt",
+      "cases_file": "cases/pii/german_passport.json",
+      "case_count": 27
+    }
+  ],
+  "health": [
+    {
+      "id": "uk_nhs_number",
+      "name": "UK National Health Service (NHS) Number",
+      "keyword": "NHS number",
+      "sample_values": [
+        "4010234237",
+        "6543218800"
+      ],
+      "validity_note": "Checksum-verified: NHS Data Dictionary Modulus 11 algorithm (weights 10..2 on the first 9 digits; a remainder of 10 means the number must never be issued).",
+      "filter_type": "Phi",
+      "prompts_file": "prompts/health/uk_nhs_number.md",
+      "blocklist_document": "blocklist_documents/health/uk_nhs_number.txt",
+      "cases_file": "cases/health/uk_nhs_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "au_medicare_number",
+      "name": "Australian Medicare Number",
+      "keyword": "Medicare number",
+      "sample_values": [
+        "2456123471",
+        "4567890181",
+        "5678123481"
+      ],
+      "validity_note": "Checksum-verified: published weighted modulus-10 algorithm (weights 1,3,7,9 repeating over the first 8 digits = 9th-digit check digit); the 10th digit is the non-checksummed Individual Reference Number. First digit 2-6 indicates issuing state, per the published rule.",
+      "filter_type": "Phi",
+      "prompts_file": "prompts/health/au_medicare_number.md",
+      "blocklist_document": "blocklist_documents/health/au_medicare_number.txt",
+      "cases_file": "cases/health/au_medicare_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "medical_license_number",
+      "name": "Medical License Number (US, generic/representative)",
+      "keyword": "medical license number",
+      "sample_values": [
+        "ME123456",
+        "ME208734",
+        "ME045981"
+      ],
+      "validity_note": "Format-only. No universal US format/checksum exists — each state medical board defines its own. Uses Florida's published prefix convention ('ME' = Medical Doctor) as a real, authoritative representative format.",
+      "filter_type": "Phi",
+      "prompts_file": "prompts/health/medical_license_number.md",
+      "blocklist_document": "blocklist_documents/health/medical_license_number.txt",
+      "cases_file": "cases/health/medical_license_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "icd10_cm_code",
+      "name": "ICD-10 Clinical Modification (ICD-10-CM) Diagnosis Code",
+      "keyword": "ICD-10 diagnosis code",
+      "sample_values": [
+        "Z00.00",
+        "J00",
+        "Z23"
+      ],
+      "validity_note": "These are REAL, currently valid, billable ICD-10-CM codes (not fabricated), chosen for clearly innocuous meanings: Z00.00 = routine adult physical exam, J00 = the common cold, Z23 = a routine immunization encounter.",
+      "filter_type": "Phi",
+      "prompts_file": "prompts/health/icd10_cm_code.md",
+      "blocklist_document": "blocklist_documents/health/icd10_cm_code.txt",
+      "cases_file": "cases/health/icd10_cm_code.json",
+      "case_count": 27
+    },
+    {
+      "id": "icd10_pcs_code",
+      "name": "ICD-10 Procedure Coding System (ICD-10-PCS) Code",
+      "keyword": "ICD-10-PCS procedure code",
+      "sample_values": [
+        "0DTJ4ZZ",
+        "0DTJ0ZZ"
+      ],
+      "validity_note": "REAL, currently valid, billable ICD-10-PCS codes for a common, innocuous procedure (laparoscopic and open appendectomy respectively) — not fabricated.",
+      "filter_type": "Phi",
+      "prompts_file": "prompts/health/icd10_pcs_code.md",
+      "blocklist_document": "blocklist_documents/health/icd10_pcs_code.txt",
+      "cases_file": "cases/health/icd10_pcs_code.json",
+      "case_count": 27
+    },
+    {
+      "id": "us_npi_number",
+      "name": "US Healthcare NPI Number (National Provider Identifier)",
+      "keyword": "NPI number",
+      "sample_values": [
+        "1234567893",
+        "1452339116",
+        "2234567818"
+      ],
+      "validity_note": "Checksum-verified: CMS-documented algorithm — standard Luhn applied to the 9-digit identifier prefixed with the constant '80840' (80 = health applications, 840 = USA). Cross-checked against a CMS-published worked example.",
+      "filter_type": "Phi",
+      "prompts_file": "prompts/health/us_npi_number.md",
+      "blocklist_document": "blocklist_documents/health/us_npi_number.txt",
+      "cases_file": "cases/health/us_npi_number.json",
+      "case_count": 27
+    },
+    {
+      "id": "fda_ndc_code",
+      "name": "FDA National Drug Code (NDC)",
+      "keyword": "NDC drug code",
+      "sample_values": [
+        "0777-3105-02",
+        "50580-449-10",
+        "00002-7597-01"
+      ],
+      "validity_note": "No checksum exists for NDCs. First two are REAL FDA-registered codes (Prozac 20mg and Tylenol Extra Strength packaging, both widely-published reference examples, not fabricated); the third illustrates the HIPAA 11-digit 5-4-2 billing conversion format.",
+      "filter_type": "Phi",
+      "prompts_file": "prompts/health/fda_ndc_code.md",
+      "blocklist_document": "blocklist_documents/health/fda_ndc_code.txt",
+      "cases_file": "cases/health/fda_ndc_code.json",
+      "case_count": 33
+    },
+    {
+      "id": "us_hicn",
+      "name": "US Health Insurance Claim Number (HICN, legacy Medicare identifier)",
+      "keyword": "HICN",
+      "sample_values": [
+        "999887777A",
+        "998765432D1",
+        "987654321B"
+      ],
+      "validity_note": "Format-only (SSN + Beneficiary Identification Code suffix). Officially retired and replaced by the MBI in April 2018, but still a recognized historical PII format. Sample SSNs use the 900-999 area range, never allocated by the SSA.",
+      "filter_type": "Phi",
+      "prompts_file": "prompts/health/us_hicn.md",
+      "blocklist_document": "blocklist_documents/health/us_hicn.txt",
+      "cases_file": "cases/health/us_hicn.json",
+      "case_count": 27
+    },
+    {
+      "id": "us_medicare_mbi",
+      "name": "US Medicare Beneficiary Identifier (MBI)",
+      "keyword": "Medicare Beneficiary Identifier",
+      "sample_values": [
+        "1EG4TE5MK73",
+        "9YH7JW2XM45",
+        "3CN1QK8HV29"
+      ],
+      "validity_note": "Format-only by design — CMS explicitly built the MBI with no check digit. Matches CMS's exact 11-position template (restricted letters excluding S/L/O/I/B/Z); '1EG4TE5MK73' is CMS's own published illustrative example (its dashes are for display only, not part of the stored value).",
+      "filter_type": "Phi",
+      "prompts_file": "prompts/health/us_medicare_mbi.md",
+      "blocklist_document": "blocklist_documents/health/us_medicare_mbi.txt",
+      "cases_file": "cases/health/us_medicare_mbi.json",
+      "case_count": 27
+    },
+    {
+      "id": "de_kvnr",
+      "name": "German Health Insurance Number (Krankenversichertennummer / KVNR)",
+      "keyword": "Krankenversichertennummer",
+      "sample_values": [
+        "A12345678001",
+        "M55512345305",
+        "T90012345605"
+      ],
+      "validity_note": "Checksum-verified per the GKV-Spitzenverband/ITSG-documented algorithm: the birth-surname initial letter becomes its A=01..Z=26 position, combined with 8 digits into a 10-position sequence with alternating weights 1/2, digit-summed and reduced mod 10 for the check digit; a 2-digit insurer-assigned suffix follows uncheck-summed. Matched exactly against the documented worked example.",
+      "filter_type": "Phi",
+      "prompts_file": "prompts/health/de_kvnr.md",
+      "blocklist_document": "blocklist_documents/health/de_kvnr.txt",
+      "cases_file": "cases/health/de_kvnr.json",
+      "case_count": 27
+    },
+    {
+      "id": "de_lanr",
+      "name": "German Physician Number (Lebenslange Arztnummer / LANR)",
+      "keyword": "lebenslange Arztnummer",
+      "sample_values": [
+        "123456601",
+        "654321101",
+        "111222901"
+      ],
+      "validity_note": "Checksum-verified: the first 6 (largely arbitrary) digits are weighted alternately by 4/9, summed, and the check digit is 10 minus the mod-10 remainder (10->0). Digits 8-9 are an uncheck-summed specialty-code suffix.",
+      "filter_type": "Phi",
+      "prompts_file": "prompts/health/de_lanr.md",
+      "blocklist_document": "blocklist_documents/health/de_lanr.txt",
+      "cases_file": "cases/health/de_lanr.json",
+      "case_count": 27
+    }
+  ],
+  "secrets": [
+    {
+      "id": "artifactory_token",
+      "name": "Artifactory API Key",
+      "keyword": "Artifactory API key",
+      "sample_values": [
+        "AKCpEXAMPLE00000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "validity_note": "Format-valid synthetic (zero-entropy placeholder body), not a real credential. Matches JFrog's own documented format exactly: prefix 'AKCp' + 69 alphanumeric characters (73 total). No official JFrog example value is published (only the format is documented); this legacy API-key type is now end-of-life in favor of JFrog's newer Reference Tokens ('cmVmd' + 59 chars).",
+      "filter_type": "Secrets",
+      "prompts_file": "prompts/secrets/artifactory_token.md",
+      "blocklist_document": "blocklist_documents/secrets/artifactory_token.txt",
+      "cases_file": "cases/secrets/artifactory_token.json",
+      "case_count": 27
+    },
+    {
+      "id": "aws_access_key_id",
+      "name": "AWS Access Key ID",
+      "keyword": "AWS access key",
+      "sample_values": [
+        "AKIAIOSFODNN7EXAMPLE",
+        "AKIAJZ5EXAMPLE2ZZZZZ"
+      ],
+      "validity_note": "First value is AWS's own official documentation placeholder (IAM User Guide) — also independently well-precedented as a safe value, since it's the exact string commonly allowlisted by secret-scanners specifically because it's AWS's own doc example, not a leaked key. Format: 'AKIA' (long-term IAM user key; 'ASIA' = temporary/STS) + 16 more base32-charset (A-Z2-7) characters, 20 total.",
+      "filter_type": "Secrets",
+      "prompts_file": "prompts/secrets/aws_access_key_id.md",
+      "blocklist_document": "blocklist_documents/secrets/aws_access_key_id.txt",
+      "cases_file": "cases/secrets/aws_access_key_id.json",
+      "case_count": 27
+    },
+    {
+      "id": "aws_secret_access_key",
+      "name": "AWS Secret Access Key",
+      "keyword": "AWS secret access key",
+      "sample_values": [
+        "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+        "0000000000EXAMPLESECRETKEY00000000000000"
+      ],
+      "validity_note": "First value is AWS's own official documentation placeholder, paired in AWS's docs with the access key ID above. Format: 40 characters from the base64 charset [A-Za-z0-9/+].",
+      "filter_type": "Secrets",
+      "prompts_file": "prompts/secrets/aws_secret_access_key.md",
+      "blocklist_document": "blocklist_documents/secrets/aws_secret_access_key.txt",
+      "cases_file": "cases/secrets/aws_secret_access_key.json",
+      "case_count": 27
+    },
+    {
+      "id": "azure_storage_key",
+      "name": "Azure Storage Account Key",
+      "keyword": "Azure Storage key",
+      "sample_values": [
+        "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw=="
+      ],
+      "validity_note": "Microsoft's own published, intentionally-public local-emulator (Azurite) key — explicitly documented as serving no real security purpose and unusable against any real Azure storage account. Format: 88 base64 characters (86 from [A-Za-z0-9/+] + '==' padding), decoding to exactly 64 bytes — verified by decoding it.",
+      "filter_type": "Secrets",
+      "prompts_file": "prompts/secrets/azure_storage_key.md",
+      "blocklist_document": "blocklist_documents/secrets/azure_storage_key.txt",
+      "cases_file": "cases/secrets/azure_storage_key.json",
+      "case_count": 27
+    },
+    {
+      "id": "basic_auth_header",
+      "name": "Basic Auth Header",
+      "keyword": "Basic Auth header",
+      "sample_values": [
+        "Basic ZGVtbzpkZW1v",
+        "Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM="
+      ],
+      "validity_note": "Format-valid synthetic per RFC 7617 (Authorization: Basic <base64(username:password)>). Both encode obviously-placeholder credentials (demo:demo, testuser:testpass123); the base64 encode/decode round-trip was verified programmatically.",
+      "filter_type": "Secrets",
+      "prompts_file": "prompts/secrets/basic_auth_header.md",
+      "blocklist_document": "blocklist_documents/secrets/basic_auth_header.txt",
+      "cases_file": "cases/secrets/basic_auth_header.json",
+      "case_count": 29
+    },
+    {
+      "id": "github_token",
+      "name": "GitHub Personal Access Token",
+      "keyword": "GitHub token",
+      "sample_values": [
+        "ghp_EXAMPLE00000000000000000000000000000",
+        "github_pat_EXAMPLE000000000000000_EXAMPLE0000000000000000000000000000000000000000000000000000"
+      ],
+      "validity_note": "Format-valid synthetic (zero-entropy placeholder body), not a real token — GitHub never publishes example token values (tokens are shown only once, at creation). Matches GitHub's documented prefixes exactly: 'ghp_' + 36 chars (40 total, classic PAT) and 'github_pat_' + 22 + '_' + 59 chars (93 total, fine-grained PAT); exact lengths cross-confirmed against independent secret-scanner rule sets.",
+      "filter_type": "Secrets",
+      "prompts_file": "prompts/secrets/github_token.md",
+      "blocklist_document": "blocklist_documents/secrets/github_token.txt",
+      "cases_file": "cases/secrets/github_token.json",
+      "case_count": 27
+    },
+    {
+      "id": "jwt_token",
+      "name": "JSON Web Token (JWT)",
+      "keyword": "JWT",
+      "sample_values": [
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOTg3NjU0MzIxIiwibmFtZSI6IkphbmUgUm9lIiwiaWF0IjoxNzAwMDAwMDAwfQ.k_Ge5jbag_T_pf1KQYkuNbZbu6wPurhzAuS9ycbt8a4"
+      ],
+      "validity_note": "First value is jwt.io's long-standing canonical HS256 debugger example — an official, designed-to-be-public placeholder, signed with the well-known public secret 'your-256-bit-secret'. Second value is a freshly-generated token with a different fictional payload, signed with the same well-known secret; both signatures were independently recomputed and confirmed to match.",
+      "filter_type": "Secrets",
+      "prompts_file": "prompts/secrets/jwt_token.md",
+      "blocklist_document": "blocklist_documents/secrets/jwt_token.txt",
+      "cases_file": "cases/secrets/jwt_token.json",
+      "case_count": 27
+    }
+  ],
+  "control": [
+    {
+      "id": "control",
+      "name": "Negative control (benign)",
+      "keyword": "",
+      "sample_values": [],
+      "validity_note": "Benign prompts containing no sensitive data. They must pass through; a block here is a false positive.",
+      "filter_type": null,
+      "prompts_file": "prompts/control/control.md",
+      "blocklist_document": null,
+      "cases_file": "cases/control/control.json",
+      "case_count": 5
+    }
+  ]
+}
